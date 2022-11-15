@@ -13,8 +13,8 @@ from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from polly_style.exceptions import BadeRequestException, ForbiddenException, AccessException
-from polly_style.responses import AccessResponse
+from logisticproject.exceptions import BadeRequestException, ForbiddenException, AccessException
+from logisticproject.responses import AccessResponse
 from users import schema
 from users.models import ConfirmPhone, User, ConfirmPassword
 from users.permissions import IsOwner

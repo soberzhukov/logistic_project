@@ -31,7 +31,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'cities_light',
     # custom apps
-    'users'
+    'users',
+    'order',
+    'offer',
+    'payment'
+
 ]
 
 MIDDLEWARE = [

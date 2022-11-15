@@ -5,8 +5,8 @@ import string
 from django.conf import settings
 from phonenumber_field.phonenumber import PhoneNumber
 
-from polly_style.container import Container
-from polly_style.exceptions import BadeRequestException
+from logisticproject.container import Container
+from logisticproject.exceptions import BadeRequestException
 from users.models import ConfirmPhone, ConfirmPassword
 
 

@@ -1,4 +1,4 @@
-from polly_style.settings import Iqsms_login, Iqsms_password
+from logisticproject.settings import Iqsms_login, Iqsms_password
 from .services import ServiceSendSms
 
 

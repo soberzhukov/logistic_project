@@ -1,4 +1,4 @@
-from polly_style.celeryapp import app
+from logisticproject.celeryapp import app
 from users.actions import SendSmsVerificationCode
 
 
