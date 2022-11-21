@@ -1,7 +1,9 @@
-from rest_framework import permissions, mixins
+from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
+from rest_framework.viewsets import ModelViewSet
 
 from order.models import Order
 from order.serializers import GetOrderSerializer, UpdateOrderSerializer
@@ -43,3 +45,14 @@ class MyListOrdersAPIView(ListAPIView):
 
     def get_queryset(self):
         return Order.objects.filter(author=self.request.user)
+
+
+class CounterOrderAPIView(CreateAPIView):
+    queryset = Order.objects.all()
+    permission_classes = (permissions.AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.count_views += 1
+        instance.save()
+        return Response(data={'message': 'ok'}, status=HTTP_200_OK)

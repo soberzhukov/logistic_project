@@ -8,5 +8,6 @@ router.register('offers', views.CRUDOfferViewSet)
 
 urlpatterns = [
     path('offers/create/', views.CreateOfferAPIView.as_view()),
-    path('offers/my/', views.MyListOffersAPIView.as_view())
+    path('offers/my/', views.MyListOffersAPIView.as_view()),
+    path('offers/<slug:pk>/view/', views.CounterOfferAPIView.as_view(), name='counter_views_offer'),
 ] + router.urls

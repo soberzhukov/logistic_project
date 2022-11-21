@@ -46,6 +46,7 @@ class Order(models.Model):
     max_contracts = models.PositiveIntegerField('Максимальное количество исполнителей', default=0)
 
     budget = models.ForeignKey(Budget, models.SET_NULL, null=True, related_name='orders')
+    count_views = models.PositiveIntegerField('Количество просмотров', default=0)
 
     def __str__(self):
         return self.name

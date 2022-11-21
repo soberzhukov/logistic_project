@@ -1,6 +1,8 @@
 from rest_framework import permissions
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, get_object_or_404
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
 from offer.models import Offer
@@ -43,3 +45,15 @@ class MyListOffersAPIView(ListAPIView):
 
     def get_queryset(self):
         return Offer.objects.filter(author=self.request.user)
+
+
+class CounterOfferAPIView(CreateAPIView):
+    queryset = Offer.objects.all()
+    permission_classes = (permissions.AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.count_views += 1
+        instance.save()
+        return Response(data={'message': 'ok'}, status=HTTP_200_OK)
+
