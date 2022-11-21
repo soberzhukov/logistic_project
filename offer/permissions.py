@@ -8,7 +8,7 @@ class IsOwner(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         """Можно изменять только владельцу"""
-        return request.user == obj
+        return request.user == obj.author
 
 
 
