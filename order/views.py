@@ -23,7 +23,7 @@ class CRUDOrderViewSet(ModelViewSet):
 
 
 class MyListOrdersViewSet(mixins.ListModelMixin,
-                         GenericViewSet):
+                          GenericViewSet):
     queryset = Order.objects.all()
     serializer_class = GetOrderSerializer
     permission_classes = (permissions.AllowAny,)
