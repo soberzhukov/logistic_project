@@ -128,3 +128,4 @@ cython_debug/
 .idea/
 http_requests
 uploads
+project.pid
