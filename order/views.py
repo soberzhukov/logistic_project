@@ -1,26 +1,22 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
+from logisticproject.utils import BasicPagination
 from order.models import Order
 from order.serializers import GetOrderSerializer, UpdateOrderSerializer
+from users.permissions import IsAuthor
 from .filters import OrderFilter
-from .permissions import IsOwner
-
-
-class BasicPagination(PageNumberPagination):
-    page_size = 10
 
 
 class CRUDOrderViewSet(ModelViewSet):
     """CRUD without create"""
     queryset = Order.objects.all()
     serializer_class = GetOrderSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    permission_classes = (permissions.IsAuthenticated, IsAuthor)
     filter_backends = [DjangoFilterBackend]
     filterset_class = OrderFilter
     pagination_class = BasicPagination
@@ -36,7 +32,7 @@ class CRUDOrderViewSet(ModelViewSet):
 class CreateOrderAPIView(CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = UpdateOrderSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    permission_classes = (permissions.IsAuthenticated, IsAuthor)
 
 
 class MyListOrdersAPIView(ListAPIView):
