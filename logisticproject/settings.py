@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'cities_light',
+    'django_filters',
     # custom apps
     'users',
     'order',
@@ -121,7 +122,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'ORDERING_PARAM': 'sort',
+    'SEARCH_PARAM': 'q'
 }
 
 SIMPLE_JWT = {

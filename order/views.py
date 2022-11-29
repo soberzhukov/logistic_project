@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.pagination import PageNumberPagination
@@ -7,6 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from order.models import Order
 from order.serializers import GetOrderSerializer, UpdateOrderSerializer
+from .filters import OrderFilter
 from .permissions import IsOwner
 
 
@@ -19,7 +21,8 @@ class CRUDOrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = GetOrderSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwner)
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = OrderFilter
     pagination_class = BasicPagination
 
     def get_serializer_class(self):
