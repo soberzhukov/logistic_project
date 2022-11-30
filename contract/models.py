@@ -31,8 +31,8 @@ class Contract(models.Model):
 
     ]
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, blank=True, related_name='contracts_order')
-    offer = models.ForeignKey(Offer, on_delete=models.CASCADE, blank=True, related_name='contracts_offer')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, blank=True, null=True, related_name='contracts_order')
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE, blank=True, null=True, related_name='contracts_offer')
     amount = models.ForeignKey(Budget, models.SET_NULL, null=True, related_name='contracts')
     executor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True,
                                  related_name='contracts_executor', verbose_name='Исполнитель')
@@ -41,7 +41,7 @@ class Contract(models.Model):
     status = models.CharField('Статус', max_length=300, choices=STATUS_CHOICES, blank=True,
                               default=StatusContract.CREATED)
     signature = models.BooleanField('Подтвержден?', default=False)
-    condition = models.CharField('condition', max_length=500)
+    condition = models.CharField('condition', max_length=500, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Контракт'
