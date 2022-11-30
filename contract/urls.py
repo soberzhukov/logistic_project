@@ -6,4 +6,6 @@ from . import views
 router = DefaultRouter()
 router.register('contract', views.CreateReadContractViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('contract/<slug:pk>/status/', views.ChangeStatusAPIView.as_view()),
+] + router.urls

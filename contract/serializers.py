@@ -32,3 +32,12 @@ class UpdateContractSerializer(serializers.ModelSerializer):
         if attrs.get('order'):
             attrs['executor'] = user
         return attrs
+
+
+class StatusContractSerializer(serializers.Serializer):
+    status = serializers.CharField(required=True)
+
+    def validate_status(self, obj):
+        if obj not in ['created', 'rejected', 'in_process', 'moderation', 'completed', 'for_revision', 'dispute']:
+            raise serializers.ValidationError('not found')
+        return obj
