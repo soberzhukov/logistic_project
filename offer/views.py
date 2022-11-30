@@ -30,7 +30,7 @@ class CRUDOfferViewSet(ModelViewSet):
         return super(CRUDOfferViewSet, self).list(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = self.queryset.annotate(count_cs=Count('contracts_order')).filter(max_contracts__gt=F('count_cs'))
+        queryset = self.queryset.annotate(count_cs=Count('contracts_offer')).filter(max_contracts__gt=F('count_cs'))
         if self.request.method not in ['POST', 'GET']:
             return self.queryset.filter(author=self.request.user)
         if self.request.user.is_authenticated and self.action == 'retrieve':

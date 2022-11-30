@@ -53,6 +53,8 @@ class Offer(models.Model):
     budget = models.ForeignKey(Budget, models.SET_NULL, null=True, related_name='offers')
     count_views = models.PositiveIntegerField('Количество просмотров', default=0)
 
+    objects = OfferManager()
+
     def __str__(self):
         return self.name
 
