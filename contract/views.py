@@ -29,6 +29,7 @@ class CreateReadContractViewSet(mixins.CreateModelMixin,
 
 
 class ChangeStatusAPIView(GenericAPIView):
+    """Изменение статуса контракта, доступ у владельца order/offer"""
     queryset = Contract.objects.all()
     serializer_class = StatusContractSerializer
     permission_classes = (permissions.IsAuthenticated,)
