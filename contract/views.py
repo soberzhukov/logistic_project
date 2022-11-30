@@ -7,7 +7,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from logisticproject.utils import BasicPagination
 from .models import Contract
-from .serializers import GetContractSerializer, UpdateContractSerializer, StatusContractSerializer
+from .serializers import GetContractSerializer, CreateContractSerializer, StatusContractSerializer
 
 
 class CreateReadContractViewSet(mixins.CreateModelMixin,
@@ -20,7 +20,7 @@ class CreateReadContractViewSet(mixins.CreateModelMixin,
     pagination_class = BasicPagination
 
     def get_serializer_class(self):
-        return GetContractSerializer if self.action in ['list', 'retrieve'] else UpdateContractSerializer
+        return GetContractSerializer if self.action in ['list', 'retrieve'] else CreateContractSerializer
 
     def get_queryset(self):
         user = self.request.user

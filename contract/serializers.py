@@ -18,7 +18,7 @@ class GetContractSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class UpdateContractSerializer(serializers.ModelSerializer):
+class CreateContractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = '__all__'
