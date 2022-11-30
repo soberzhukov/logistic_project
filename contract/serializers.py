@@ -36,12 +36,12 @@ class CreateContractSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_order(self, obj):
-        if obj.max_contracts >= obj.contracts_order.count():
+        if obj.max_contracts <= obj.contracts_order.count():
             raise serializers.ValidationError('max_contracts')
         return obj
 
     def validate_offer(self, obj):
-        if obj.max_contracts >= obj.contracts_offer.count():
+        if obj.max_contracts <= obj.contracts_offer.count():
             raise serializers.ValidationError('max_contracts')
         return obj
 

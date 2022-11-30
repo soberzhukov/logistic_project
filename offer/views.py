@@ -34,7 +34,7 @@ class CRUDOfferViewSet(ModelViewSet):
         if self.request.method not in ['POST', 'GET']:
             return self.queryset.filter(author=self.request.user)
         if self.request.user.is_authenticated and self.action == 'retrieve':
-            queryset += self.queryset.filter(author=self.request.user)
+            queryset = queryset | self.queryset.filter(author=self.request.user)
         return queryset.distinct()
 
 

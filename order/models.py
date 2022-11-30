@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.db.models import Count, F
 from django.utils import timezone
 
 from payment.models import Budget
@@ -18,6 +19,14 @@ class StatusOrder:
 
 class PaymentMethod:
     CARD = 'credit_card'
+
+
+class OrderManager(models.Manager):
+    def all(self):
+        return self.get_queryset().exclude(status='deleted')
+
+    def get_lt_max_contracts(self):
+        return self.all().annotate(count_cs=Count('contracts_order')).filter(max_contracts__gt=F('count_cs'))
 
 
 class Order(models.Model):
@@ -47,6 +56,7 @@ class Order(models.Model):
 
     budget = models.ForeignKey(Budget, models.SET_NULL, null=True, related_name='orders')
     count_views = models.PositiveIntegerField('Количество просмотров', default=0)
+    objects = OrderManager()
 
     def __str__(self):
         return self.name
