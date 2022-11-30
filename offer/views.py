@@ -7,8 +7,9 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet
 
 from logisticproject.utils import BasicPagination
-from offer.models import Offer
-from offer.serializers import GetOfferSerializer, UpdateOfferSerializer
+from offer.models import Offer, ElectedOffer
+from offer.serializers import GetOfferSerializer, UpdateOfferSerializer, GetElectedOfferSerializer, \
+    UpdateElectedOfferSerializer
 from users.permissions import IsAuthor
 from .filters import OfferFilter
 
@@ -65,3 +66,16 @@ class CounterOfferAPIView(CreateAPIView):
         instance.count_views += 1
         instance.save()
         return Response(data={'message': 'ok'}, status=HTTP_200_OK)
+
+
+class ElectedOfferViewSet(ModelViewSet):
+    queryset = ElectedOffer.objects.all()
+    serializer_class = GetElectedOfferSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = BasicPagination
+
+    def get_serializer_class(self):
+        return GetElectedOfferSerializer if self.action in ['list', 'retrieve'] else UpdateElectedOfferSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)

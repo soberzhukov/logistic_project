@@ -4,7 +4,10 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
+
+router.register('offers/elected', views.ElectedOfferViewSet)
 router.register('offers', views.CRUDOfferViewSet)
+
 
 urlpatterns = [
     path('offers/create/', views.CreateOfferAPIView.as_view()),

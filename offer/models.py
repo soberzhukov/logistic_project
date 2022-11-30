@@ -66,7 +66,7 @@ class Offer(models.Model):
 class ElectedOffer(models.Model):
     """Избранное предложение"""
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, related_name='rel_user_offer_elected', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='rel_user_offer_elected', on_delete=models.CASCADE, blank=True)
     offer = models.ForeignKey(Offer, related_name='rel_offer_elected', on_delete=models.CASCADE)
     notes = models.TextField('Отзыв', blank=True, null=True)
 

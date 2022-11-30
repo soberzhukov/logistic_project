@@ -60,7 +60,7 @@ class UpdateElectedOrderSerializer(ModelSerializer):
     def validate(self, attrs):
         user = self.context['request'].user
         attrs['user'] = user
-        if ElectedOrder.objects.filter(user=user, order=attrs['order']).exists():
+        if ElectedOrder.objects.filter(user=user, order=attrs.get('order')).exists():
             raise serializers.ValidationError([f"{attrs['order'].id} - already exists."])
         return attrs
 
