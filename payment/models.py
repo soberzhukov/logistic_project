@@ -37,7 +37,7 @@ class Budget(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     currency = models.CharField('Валюта', max_length=500, choices=CURRENCY_CHOICES, blank=True,
                                 default=CurrencyMethod.RUB)
-    count = models.PositiveIntegerField('Количество', default=0)
+    count = models.DecimalField('Количество/цена??', max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.currency
