@@ -8,6 +8,7 @@ router = DefaultRouter()
 
 router.register('orders', views.CRUDOrderViewSet)
 router.register('search', views.SearchViewSet)
+router.register('elected_order', views.ElectedOrderViewSet)
 
 urlpatterns = [
     path('orders/create/', views.CreateOrderAPIView.as_view()),

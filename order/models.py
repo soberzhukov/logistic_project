@@ -69,7 +69,7 @@ class Order(models.Model):
 class ElectedOrder(models.Model):
     """Избранный заказ"""
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, related_name='rel_user_order_elected', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='rel_user_order_elected', on_delete=models.CASCADE, blank=True)
     order = models.ForeignKey(Order, related_name='rel_order_elected', on_delete=models.CASCADE)
     notes = models.TextField('Отзыв', blank=True, null=True)
 

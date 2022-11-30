@@ -7,9 +7,9 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from logisticproject.utils import BasicPagination
-from order.models import Order, SavedSearch
+from order.models import Order, SavedSearch, ElectedOrder
 from order.serializers import GetOrderSerializer, UpdateOrderSerializer, GetSavedSearchSerializer, \
-    CreateDeleteSavedSearchSerializer
+    CreateDeleteSavedSearchSerializer, GetElectedOrderSerializer, UpdateElectedOrderSerializer
 from users.permissions import IsAuthor
 from .filters import OrderFilter
 
@@ -82,3 +82,16 @@ class SearchViewSet(mixins.CreateModelMixin,
 
     def get_queryset(self):
         return self.queryset.filter(author=self.request.user)
+
+
+class ElectedOrderViewSet(ModelViewSet):
+    queryset = ElectedOrder.objects.all()
+    serializer_class = GetElectedOrderSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = BasicPagination
+
+    def get_serializer_class(self):
+        return GetElectedOrderSerializer if self.action in ['list', 'retrieve'] else UpdateElectedOrderSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
