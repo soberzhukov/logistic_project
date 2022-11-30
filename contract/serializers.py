@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
+from offer.models import Offer
 from offer.serializers import GetOfferSerializer
+from order.models import Order
 from order.serializers import GetOrderSerializer
 from users.serializers import GetUserSerializer
 from .models import Contract
@@ -32,6 +34,16 @@ class CreateContractSerializer(serializers.ModelSerializer):
         if attrs.get('order'):
             attrs['executor'] = user
         return attrs
+
+    def validate_order(self, obj):
+        if obj.max_contracts >= obj.contracts_order.count():
+            raise serializers.ValidationError('max_contracts')
+        return obj
+
+    def validate_offer(self, obj):
+        if obj.max_contracts >= obj.contracts_offer.count():
+            raise serializers.ValidationError('max_contracts')
+        return obj
 
 
 class StatusContractSerializer(serializers.Serializer):
