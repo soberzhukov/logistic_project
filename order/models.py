@@ -66,6 +66,21 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
 
+class ElectedOrder(models.Model):
+    """Избранный заказ"""
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, related_name='rel_user_order_elected', on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, related_name='rel_order_elected', on_delete=models.CASCADE)
+    notes = models.TextField('Отзыв', blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.order} - {self.user}'
+
+    class Meta:
+        verbose_name = 'Избранный заказ'
+        verbose_name_plural = 'Избранные заказы'
+
+
 class TypeSearch:
     ORDER = 'order'
     OFFER = 'offer'
