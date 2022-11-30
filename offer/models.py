@@ -20,6 +20,11 @@ class PaymentMethod:
     CARD = 'credit_card'
 
 
+class OfferManager(models.Manager):
+    def all(self):
+        return self.get_queryset().exclude(status='deleted')
+
+
 class Offer(models.Model):
     """Предложение"""
     STATUS_CHOICES = [

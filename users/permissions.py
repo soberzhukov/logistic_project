@@ -18,4 +18,6 @@ class IsAuthor(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         """Можно изменять только владельцу"""
+        if view.action == 'retrieve':
+            return True
         return request.user == obj.author

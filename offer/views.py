@@ -1,3 +1,4 @@
+from django.db.models import Count, F
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, ListAPIView
@@ -16,7 +17,7 @@ class CRUDOfferViewSet(ModelViewSet):
     """CRUD without create"""
     queryset = Offer.objects.all()
     serializer_class = GetOfferSerializer
-    permission_classes = (permissions.IsAuthenticated, IsAuthor)
+    permission_classes = (IsAuthor,)
     filter_backends = [DjangoFilterBackend]
     filterset_class = OfferFilter
     pagination_class = BasicPagination
@@ -25,20 +26,29 @@ class CRUDOfferViewSet(ModelViewSet):
         return GetOfferSerializer if self.action in ['list', 'retrieve', 'create'] else UpdateOfferSerializer
 
     def create(self, request, *args, **kwargs):
-        """POST request return list"""
+        """Пост запрос возвращает список"""
         return super(CRUDOfferViewSet, self).list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = self.queryset.annotate(count_cs=Count('contracts_order')).filter(max_contracts__gt=F('count_cs'))
+        if self.request.method not in ['POST', 'GET']:
+            return self.queryset.filter(author=self.request.user)
+        if self.request.user.is_authenticated and self.action == 'retrieve':
+            queryset += self.queryset.filter(author=self.request.user)
+        return queryset.distinct()
 
 
 class CreateOfferAPIView(CreateAPIView):
     queryset = Offer.objects.all()
     serializer_class = UpdateOfferSerializer
-    permission_classes = (permissions.IsAuthenticated, IsAuthor)
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class MyListOffersAPIView(ListAPIView):
+    """Мой лист"""
     queryset = Offer.objects.all()
     serializer_class = GetOfferSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     pagination_class = BasicPagination
 
