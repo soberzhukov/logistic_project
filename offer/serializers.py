@@ -10,6 +10,7 @@ class GetOfferSerializer(ModelSerializer):
     class Meta:
         model = Offer
         fields = '__all__'
+        depth = 1
 
 
 class UpdateOfferSerializer(ModelSerializer):
