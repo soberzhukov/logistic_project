@@ -40,7 +40,7 @@ class Budget(models.Model):
     count = models.DecimalField('Количество/цена??', max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.currency
+        return f'{self.count} {self.currency}'
 
     class Meta:
         verbose_name = 'Бюджет'
