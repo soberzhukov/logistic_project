@@ -33,9 +33,14 @@ class CRUDOrderViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset.annotate(count_cs=Count('contracts_order')).filter(max_contracts__gt=F('count_cs'))
         if self.request.method not in ['POST', 'GET']:
+            # пользователь может обновлять и удалять только свои ордера
             return self.queryset.filter(author=self.request.user)
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated and self.action == 'retrieve':
+            # авторизованный пользователь может получить свой ордер, даже если количество контракторов заполнено
             queryset = queryset | self.queryset.filter(author=self.request.user)
+        elif self.request.user.is_authenticated:
+            # исключаю из списка ордеры автора
+            queryset = queryset.exclude(author=self.request.user)
         return queryset.distinct()
 
 
