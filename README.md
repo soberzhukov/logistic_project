@@ -12,3 +12,10 @@ python3 -m pip install virtualenv && python3 -m virtualenv venv && source venv/b
 ```shell
 pip install -r requirements.txt
 ```
+
+## Для заполения fixture
+Ипользуйте приведенные команды в заданном порядке
+
+```bash
+python manage.py loaddata payment/fixtures/currency.json
+```

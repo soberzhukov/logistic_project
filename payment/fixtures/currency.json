@@ -1,0 +1,86 @@
+[
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Рубль",
+      "short_title": "RUB"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Евро",
+      "short_title": "EUR"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Доллар",
+      "short_title": "USD"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Tether",
+      "short_title": "USDT"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Биткойн",
+      "short_title": "BTC"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Эфир",
+      "short_title": "ETH"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Тон",
+      "short_title": "TON"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Binance Coin",
+      "short_title": "BNB"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Фунт стерлингов",
+      "short_title": "GBP"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Японская иена",
+      "short_title": "JPY"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "Жэньминьби",
+      "short_title": "CNY"
+    }
+  },
+  {
+    "model": "payment.Currency",
+    "fields": {
+      "title": "TRON",
+      "short_title": "TRX"
+    }
+  }
+]
