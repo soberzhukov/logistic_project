@@ -2,14 +2,16 @@ from django.db.models import Q
 from django_filters import rest_framework as filters
 
 from order.models import Order
-from payment.models import Budget
+from payment.models import Budget, PaymentMethod
 
 
 class OrderFilter(filters.FilterSet):
     status = filters.CharFilter(field_name='status', lookup_expr='icontains')
     budget__count = filters.RangeFilter()
     budget__currency = filters.MultipleChoiceFilter(field_name='budget__currency', choices=Budget.CURRENCY_CHOICES)
-    payment_method = filters.MultipleChoiceFilter(field_name='payment_method', choices=Order.PAYMENT_METHOD_CHOICES)
+    payment_method = filters.ModelMultipleChoiceFilter(field_name='payment_method__title', to_field_name='title',
+                                                       queryset=PaymentMethod.objects.all(),
+                                                       conjoined=True)  # AND conjoined=True
     q = filters.CharFilter(method='search')
 
     sort = filters.Filter(method='sorting_method')

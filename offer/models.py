@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 from django.utils import timezone
 
-from payment.models import Budget
+from payment.models import Budget, PaymentMethod
 from users.models import User
 
 
@@ -14,10 +14,6 @@ class StatusOffer:
     DELETED = 'deleted'
     MODERATION = 'moderation'
     PUBLISHED = 'published'
-
-
-class PaymentMethod:
-    CARD = 'credit_card'
 
 
 class OfferManager(models.Manager):
@@ -35,17 +31,13 @@ class Offer(models.Model):
         (StatusOffer.DELETED, 'Удален'),
         (StatusOffer.PUBLISHED, 'Опубликован'),
     ]
-    PAYMENT_METHOD_CHOICES = [
-        (PaymentMethod.CARD, 'Кредитной картой'),
-    ]
 
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(User, related_name='offers', on_delete=models.CASCADE, blank=True)
     name = models.CharField('Название Предложениеа', max_length=500)
     description = models.TextField('Описание', blank=True, null=True)
     status = models.CharField('Статус', max_length=300, choices=STATUS_CHOICES, blank=True, default=StatusOffer.DRAFT)
-    payment_method = models.CharField('Метод оплаты', max_length=300, choices=PAYMENT_METHOD_CHOICES, blank=True,
-                                      default=PaymentMethod.CARD)
+    payment_method = models.ForeignKey(PaymentMethod, models.SET_NULL, null=True, related_name='offers')
     execution_time = models.DateTimeField('Время исполнения', blank=True, null=True)
     date_created = models.DateTimeField('Дата создания', blank=True, default=timezone.now)
     max_contracts = models.PositiveIntegerField('Максимальное количество заказчиков', default=0)

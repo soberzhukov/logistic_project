@@ -45,3 +45,15 @@ class Budget(models.Model):
     class Meta:
         verbose_name = 'Бюджет'
         verbose_name_plural = 'Бюджеты'
+
+
+class PaymentMethod(models.Model):
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+    title = models.CharField('Метод оплаты', max_length=300)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Метод оплаты'
+        verbose_name_plural = 'Метод оплаты'
