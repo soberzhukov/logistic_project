@@ -4,20 +4,28 @@ from common.models import SavedSearch
 from users.serializers import GetUserSerializer
 
 
-class GetSavedSearchSerializer(ModelSerializer):
+class GetObjectSerializer(ModelSerializer):
     author = GetUserSerializer()
 
     class Meta:
-        model = SavedSearch
         fields = '__all__'
         depth = 1
 
 
-class CreateDeleteSavedSearchSerializer(ModelSerializer):
+class UpdateObjectSerializer(ModelSerializer):
     class Meta:
-        model = SavedSearch
         fields = '__all__'
 
     def validate(self, attrs):
         attrs['author'] = self.context['request'].user
         return attrs
+
+
+class GetSavedSearchSerializer(GetObjectSerializer):
+    class Meta(GetObjectSerializer.Meta):
+        model = SavedSearch
+
+
+class CreateDeleteSavedSearchSerializer(UpdateObjectSerializer):
+    class Meta(UpdateObjectSerializer.Meta):
+        model = SavedSearch

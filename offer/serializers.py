@@ -1,27 +1,19 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
+from common.serializers import GetObjectSerializer, UpdateObjectSerializer
 from offer.models import Offer, ElectedOffer
 from users.serializers import GetUserSerializer
 
 
-class GetOfferSerializer(ModelSerializer):
-    author = GetUserSerializer()
-
-    class Meta:
+class GetOfferSerializer(GetObjectSerializer):
+    class Meta(GetObjectSerializer.Meta):
         model = Offer
-        fields = '__all__'
-        depth = 1
 
 
-class UpdateOfferSerializer(ModelSerializer):
-    class Meta:
+class UpdateOfferSerializer(UpdateObjectSerializer):
+    class Meta(UpdateObjectSerializer.Meta):
         model = Offer
-        fields = '__all__'
-
-    def validate(self, attrs):
-        attrs['author'] = self.context['request'].user
-        return attrs
 
 
 class GetElectedOfferSerializer(ModelSerializer):
