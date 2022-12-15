@@ -21,7 +21,7 @@ class CRUDOrderViewSet(CRUDObjectViewSet):
         return GetOrderSerializer if self.action in self.read_action_list else UpdateOrderSerializer
 
     def get_queryset(self, *args, **kwargs):
-        super().get_queryset(contracts_field='contracts_order')
+        return super().get_queryset(contracts_field='contracts_order')
 
 
 class CreateOrderAPIView(CreateAPIView):

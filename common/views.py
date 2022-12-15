@@ -54,6 +54,10 @@ class CRUDObjectViewSet(ModelViewSet):
             queryset = queryset.exclude(author=self.request.user)
         return queryset.distinct()
 
+    def filter_queryset(self, queryset):
+        if self.action == 'create':
+            return super().filter_queryset(queryset)
+        return queryset
 
 class CounterObjectAPIView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
