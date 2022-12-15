@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from common.models import SavedSearch
+
+
+@admin.register(SavedSearch)
+class SavedSearchAdmin(admin.ModelAdmin):
+    list_display = ['id', 'author', 'type_search', 'date_create']

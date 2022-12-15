@@ -31,7 +31,8 @@ class CRUDOfferViewSet(ModelViewSet):
         return super(CRUDOfferViewSet, self).list(request, *args, **kwargs)
 
     def get_queryset(self):
-        queryset = self.queryset.annotate(count_cs=Count('contracts_offer')).filter(max_contracts__gt=F('count_cs')).exclude(status='draft')
+        queryset = self.queryset.annotate(count_cs=Count('contracts_offer')).filter(
+            max_contracts__gt=F('count_cs')).exclude(status='draft')
         if self.request.method not in ['POST', 'GET']:
             # пользователь может обновлять и удалять только свои офферы
             return self.queryset.filter(author=self.request.user)

@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django_filters',
     # custom apps
     'users',
+    'common',
     'order',
     'offer',
     'payment',

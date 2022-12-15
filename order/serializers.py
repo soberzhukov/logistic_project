@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from order.models import Order, SavedSearch, ElectedOrder
+from order.models import Order, ElectedOrder
 from users.serializers import GetUserSerializer
 
 
@@ -17,25 +17,6 @@ class GetOrderSerializer(ModelSerializer):
 class UpdateOrderSerializer(ModelSerializer):
     class Meta:
         model = Order
-        fields = '__all__'
-
-    def validate(self, attrs):
-        attrs['author'] = self.context['request'].user
-        return attrs
-
-
-class GetSavedSearchSerializer(ModelSerializer):
-    author = GetUserSerializer()
-
-    class Meta:
-        model = SavedSearch
-        fields = '__all__'
-        depth = 1
-
-
-class CreateDeleteSavedSearchSerializer(ModelSerializer):
-    class Meta:
-        model = SavedSearch
         fields = '__all__'
 
     def validate(self, attrs):
@@ -63,4 +44,3 @@ class UpdateElectedOrderSerializer(ModelSerializer):
         if ElectedOrder.objects.filter(user=user, order=attrs.get('order')).exists():
             raise serializers.ValidationError([f"{attrs['order'].id} - already exists."])
         return attrs
-
