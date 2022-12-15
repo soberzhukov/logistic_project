@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from payment.models import PaymentMethod, Currency
+from payment.models import PaymentMethod, Currency, Budget
 
 
 class PaymentMethodSerializer(serializers.ModelSerializer):
@@ -14,4 +14,10 @@ class CurrencySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Currency
+        fields = '__all__'
+
+
+class BudgetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Budget
         fields = '__all__'
