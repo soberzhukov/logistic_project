@@ -133,10 +133,11 @@ class UserInfoSerializer(serializers.ModelSerializer):
     city_pk = serializers.PrimaryKeyRelatedField(
         queryset=City.objects.all(), source='city', write_only=True
     )
+    username = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'patronymic', 'email', 'city', 'city_pk']
+        fields = ['username', 'first_name', 'last_name', 'patronymic', 'email', 'city', 'city_pk']
         depth = 1
 
     def validate_email(self, obj):

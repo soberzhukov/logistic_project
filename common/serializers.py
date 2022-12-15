@@ -34,6 +34,24 @@ class UpdateObjectSerializer(serializers.ModelSerializer):
 
         return instance
 
+    def update(self, instance, validated_data):
+
+
+        if budgets_data := validated_data.get('budgets'):
+            budget = BudgetSerializer(many=True, data=budgets_data)
+            budget.is_valid(raise_exception=True)
+
+            validated_data.pop('budgets')
+
+        instance = super().update(instance, validated_data)
+        if budgets_data:
+            for budget_data in budgets_data:
+                budget = Budget(**budget_data)
+                budget.save()
+                instance.budgets.add(budget)
+
+        return instance
+
 
 class GetSavedSearchSerializer(GetObjectSerializer):
     class Meta(GetObjectSerializer.Meta):
