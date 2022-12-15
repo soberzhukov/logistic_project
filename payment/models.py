@@ -38,3 +38,6 @@ class Budget(models.Model):
     class Meta:
         verbose_name = 'Бюджет'
         verbose_name_plural = 'Бюджеты'
+
+    def __str__(self):
+        return f'{self.count} {self.currency}'

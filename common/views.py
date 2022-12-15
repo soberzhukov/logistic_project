@@ -38,12 +38,13 @@ class CRUDObjectViewSet(ModelViewSet):
         """Пост запрос возвращает список"""
         return super().list(request, *args, **kwargs)
 
-    def get_queryset(self):
+    def get_queryset(self, *args, **kwargs):
         # пользователь может обновлять и удалять только свои объекты
         if self.request.method not in ['POST', 'GET']:
             return self.queryset.filter(author=self.request.user)
 
-        queryset = self.queryset.annotate(count_cs=Count('contracts_order')).filter(
+        contracts_field = kwargs.get('contracts_field')
+        queryset = self.queryset.annotate(count_cs=Count(contracts_field)).filter(
             max_contracts__gt=F('count_cs')).exclude(status='draft')
         if self.request.user.is_authenticated and self.action == 'retrieve':
             # авторизованный пользователь может получить свой объект, даже если количество контракторов заполнено

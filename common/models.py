@@ -36,12 +36,12 @@ class CommonObject(models.Model):
     name = models.CharField('Название Предложениеа', max_length=500)
     description = models.TextField('Описание', blank=True, null=True)
     status = models.CharField('Статус', max_length=300, choices=STATUS_CHOICES, blank=True, default=CommonStatus.DRAFT)
-    payment_method = models.ForeignKey(PaymentMethod, models.SET_NULL, null=True)
+
     execution_time = models.DateTimeField('Время исполнения', blank=True, null=True)
     date_created = models.DateTimeField('Дата создания', blank=True, default=timezone.now)
     max_contracts = models.PositiveIntegerField('Максимальное количество заказчиков', default=0)
-
-    budget = models.ForeignKey(Budget, models.SET_NULL, null=True)
+    payment_methods = models.ManyToManyField(PaymentMethod)
+    budgets = models.ManyToManyField(Budget)
     count_views = models.PositiveIntegerField('Количество просмотров', default=0)
 
     objects = CommonManager()

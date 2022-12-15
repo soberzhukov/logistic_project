@@ -20,6 +20,9 @@ class CRUDOfferViewSet(CRUDObjectViewSet):
     def get_serializer_class(self):
         return GetOfferSerializer if self.action in self.read_action_list else UpdateOfferSerializer
 
+    def get_queryset(self, *args, **kwargs):
+        super().get_queryset(contracts_field='contracts_offer')
+
 
 class CreateOfferAPIView(CreateAPIView):
     """Создание предложения"""

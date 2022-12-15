@@ -15,7 +15,7 @@ class GetObjectSerializer(serializers.ModelSerializer):
 
 
 class UpdateObjectSerializer(serializers.ModelSerializer):
-    budget = BudgetSerializer()
+    budgets = BudgetSerializer(many=True)
 
     class Meta:
         fields = '__all__'
@@ -25,11 +25,13 @@ class UpdateObjectSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        budget_data = validated_data.pop('budget')
-        budget = Budget(**budget_data)
-        budget.save()
-        validated_data['budget'] = budget
+        budgets_data = validated_data.pop('budgets')
         instance = super().create(validated_data)
+        for budget_data in budgets_data:
+            budget = Budget(**budget_data)
+            budget.save()
+            instance.budgets.add(budget)
+
         return instance
 
 

@@ -6,11 +6,11 @@ from payment.models import PaymentMethod, Currency
 
 class ObjectFilter(filters.FilterSet):
     status = filters.CharFilter(field_name='status', lookup_expr='icontains')
-    budget__count = filters.RangeFilter()
-    budget__currency = filters.ModelMultipleChoiceFilter(field_name='budget__currency__short_title',
+    budgets__count = filters.RangeFilter()
+    budgets__currency = filters.ModelMultipleChoiceFilter(field_name='budgets__currency__short_title',
                                                          to_field_name='short_title',
                                                          queryset=Currency.objects.all())
-    payment_method = filters.ModelMultipleChoiceFilter(field_name='payment_method__title', to_field_name='title',
+    payment_methods = filters.ModelMultipleChoiceFilter(field_name='payment_methods__title', to_field_name='title',
                                                        queryset=PaymentMethod.objects.all())
     q = filters.CharFilter(method='search')
 
@@ -19,7 +19,7 @@ class ObjectFilter(filters.FilterSet):
 
     class Meta:
         model = None
-        fields = ['name', 'description', 'status', 'payment_method', 'execution_time', 'date_created', 'max_contracts',
+        fields = ['name', 'description', 'status', 'payment_methods', 'execution_time', 'date_created', 'max_contracts',
                   'count_views']
 
     def filter_queryset(self, queryset):
