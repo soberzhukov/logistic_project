@@ -11,7 +11,7 @@ class IsOwner(BasePermission):
         return request.user == obj
 
 
-class IsAuthor(BasePermission):
+class IsObjectAuthor(BasePermission):
     def has_permission(self, request, view):
         """Создание и получение всех элементов доступно всем"""
         return True
