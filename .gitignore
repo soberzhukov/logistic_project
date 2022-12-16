@@ -129,3 +129,4 @@ cython_debug/
 http_requests
 uploads
 project.pid
+static
