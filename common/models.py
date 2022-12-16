@@ -39,7 +39,7 @@ class CommonObject(models.Model):
 
     execution_time = models.DateTimeField('Время исполнения', blank=True, null=True)
     date_created = models.DateTimeField('Дата создания', blank=True, default=timezone.now)
-    max_contracts = models.PositiveIntegerField('Максимальное количество заказчиков', default=0)
+    max_contracts = models.PositiveIntegerField('Максимальное количество заказчиков', default=5)
     payment_methods = models.ManyToManyField(PaymentMethod)
     budgets = models.ManyToManyField(Budget)
     count_views = models.PositiveIntegerField('Количество просмотров', default=0)
