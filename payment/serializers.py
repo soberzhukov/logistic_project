@@ -18,6 +18,7 @@ class CurrencySerializer(serializers.ModelSerializer):
 
 
 class BudgetSerializer(serializers.ModelSerializer):
+    currency = CurrencySerializer()
     class Meta:
         model = Budget
         fields = '__all__'

@@ -8,6 +8,7 @@ from users.serializers import GetUserSerializer
 
 class GetObjectSerializer(serializers.ModelSerializer):
     author = GetUserSerializer()
+    budgets = BudgetSerializer(many=True)
 
     class Meta:
         fields = '__all__'

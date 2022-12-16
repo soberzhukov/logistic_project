@@ -29,7 +29,11 @@ class SearchViewSet(mixins.CreateModelMixin,
 
 
 class CRUDObjectViewSet(ModelViewSet):
-    """CRUD without create"""
+    """CRUD without create
+    не выводятся объявления в общем списке:
+        - со статусом драфт
+        - мои объявления
+        - объявления, где количество собралось максимальное количество заказчиков, по дефолту, когда я создавал было 0, поэтому они тоже не отображаются"""
     permission_classes = (IsObjectAuthor,)
     pagination_class = BasicPagination
     read_action_list = ['list', 'retrieve', 'create']
@@ -44,8 +48,8 @@ class CRUDObjectViewSet(ModelViewSet):
             return self.queryset.filter(author=self.request.user)
 
         contracts_field = kwargs.get('contracts_field')
-        queryset = self.queryset.annotate(count_cs=Count(contracts_field)).filter(
-            max_contracts__gt=F('count_cs')).exclude(status='draft')
+        queryset = self.queryset.filter(status='published').annotate(count_cs=Count(contracts_field)).filter(
+            max_contracts__gt=F('count_cs'))
         if self.request.user.is_authenticated and self.action == 'retrieve':
             # авторизованный пользователь может получить свой объект, даже если количество контракторов заполнено
             queryset = queryset | self.queryset.filter(author=self.request.user)
