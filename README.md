@@ -14,8 +14,13 @@ pip install -r requirements.txt
 ```
 
 ## Для заполения fixture
-Ипользуйте приведенные команды в заданном порядке
 
+- Заполнить базу стран и городов
+```bash
+./manage.py cities_light --force-all
+```
+- Заполнить базу кастомными данными "Валюта"
 ```bash
 python manage.py loaddata payment/fixtures/currency.json
 ```
+

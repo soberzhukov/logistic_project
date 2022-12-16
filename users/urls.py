@@ -13,7 +13,8 @@ urlpatterns = [
     path('confirm_pass/create/', views.CreatePasswordConfirmAPIView.as_view(), name='create_confirm_password'),
     path('confirm_pass/confirmed/', PasswordConfirmAPIView.as_view(), name='confirm_password'),
     path('reset_password/', ResetPasswordView.as_view(), name='reset_password'),
-    path('cities/', views.GetCitiesAPIView.as_view(), name='get_cities'),
+    # path('cities/', views.GetCitiesAPIView.as_view(), name='get_cities'),
+    path('countries/', views.GetCountriesAPIView.as_view(), name='get_countries'),
     path('user_info/', views.UserInfoAPIView.as_view(), name='user_info'),
     path('user_info/update/', views.UserInfoUpdateAPIView.as_view(), name='user_info_update')
 

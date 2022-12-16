@@ -1,7 +1,7 @@
 import datetime
 
 import pytz
-from cities_light.models import City
+from cities_light.models import Country
 from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
 from phonenumber_field.phonenumber import PhoneNumber
@@ -20,7 +20,7 @@ from users.models import ConfirmPhone, User, ConfirmPassword
 from users.permissions import IsOwner
 from users.serializers import CreateConfirmPhoneSerializer, ConfirmPhoneSerializer, RegistrationSerializer, \
     CustomTokenObtainPairSerializer, CreateConfirmPasswordSerializer, ConfirmPasswordSerializer, \
-    ResetPasswordSerializer, CitiesLightSerializer, UserInfoSerializer
+    ResetPasswordSerializer, UserInfoSerializer, CountryLightSerializer
 from users.tasks import send_code_for_confirm_phone, send_code_for_confirm_password
 
 
@@ -199,10 +199,16 @@ class ResetPasswordView(APIView):
             return Response(data={'password': 'not confirmed'}, status=HTTP_400_BAD_REQUEST)
 
 
-class GetCitiesAPIView(ListAPIView):
+# class GetCitiesAPIView(ListAPIView):
+#     """Получение списка городов"""
+#     serializer_class = CitiesLightSerializer
+#     queryset = City.objects.all()
+#     permission_classes = [permissions.AllowAny]
+
+class GetCountriesAPIView(ListAPIView):
     """Получение списка городов"""
-    serializer_class = CitiesLightSerializer
-    queryset = City.objects.all()
+    serializer_class = CountryLightSerializer
+    queryset = Country.objects.all().order_by('id')
     permission_classes = [permissions.AllowAny]
 
 

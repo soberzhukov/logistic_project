@@ -1,4 +1,4 @@
-from cities_light.models import City
+from cities_light.models import Country
 from phonenumber_field.phonenumber import PhoneNumber
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -119,25 +119,35 @@ class GetUserSerializer(serializers.ModelSerializer):
         fields = ['username', 'first_name', 'last_name']
 
 
-class CitiesLightSerializer(serializers.ModelSerializer):
-    """Сериализатор городов"""
+#
+# class CitiesLightSerializer(serializers.ModelSerializer):
+#     """Сериализатор городов"""
+#     name = serializers.CharField(source='alternate_names')
+#
+#     class Meta:
+#         model = City
+#         fields = ['id', 'name']
+
+
+class CountryLightSerializer(serializers.ModelSerializer):
+    """Сериализатор стран"""
     name = serializers.CharField(source='alternate_names')
 
     class Meta:
-        model = City
+        model = Country
         fields = ['id', 'name']
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
     """Сериализатор получения и изменения данных пользователя"""
-    city_pk = serializers.PrimaryKeyRelatedField(
-        queryset=City.objects.all(), source='city', write_only=True
+    сountry_pk = serializers.PrimaryKeyRelatedField(
+        queryset=Country.objects.all(), source='сountry', write_only=True
     )
     username = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'patronymic', 'email', 'city', 'city_pk']
+        fields = ['username', 'first_name', 'last_name', 'patronymic', 'email', 'сountry', 'сountry_pk', 'push_off']
         depth = 1
 
     def validate_email(self, obj):

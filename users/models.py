@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
-from cities_light.models import City
+from cities_light.models import City, Country
 
 
 class User(AbstractUser):
@@ -19,7 +19,8 @@ class User(AbstractUser):
     cause_blocked = models.TextField('Причина блокировки', blank=True, null=True)
     is_admin = models.BooleanField('Администратор для обслуживания устройства', blank=True, default=False)
     push_off = models.BooleanField('Отключение необязательных push уведомлений', blank=True, default=False)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Город')
+    сountry = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Страна')
+    # is_verified = models.BooleanField('Верифицирован?', default=False) # todo добавить поле, + паспортные данные
     USERNAME_FIELD = 'username'
 
     def __str__(self):
