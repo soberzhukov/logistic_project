@@ -3,6 +3,7 @@ from phonenumber_field.phonenumber import PhoneNumber
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from common.models import Image
 from users.models import ConfirmPhone, User, ConfirmPassword
 
 
@@ -140,17 +141,24 @@ class CountryLightSerializer(serializers.ModelSerializer):
 
 class UserInfoSerializer(serializers.ModelSerializer):
     """Сериализатор получения и изменения данных пользователя"""
-    сountry_pk = serializers.PrimaryKeyRelatedField(
-        queryset=Country.objects.all(), source='сountry', write_only=True
+    country_pk = serializers.PrimaryKeyRelatedField(
+        queryset=Country.objects.all(), source='country', write_only=True
     )
     username = serializers.CharField(read_only=True)
+    avatar_pk = serializers.PrimaryKeyRelatedField(
+        queryset=Image.objects.all(), source='avatar', write_only=True
+    )
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'patronymic', 'email', 'сountry', 'сountry_pk', 'push_off']
+        fields = ['username', 'first_name', 'last_name', 'patronymic', 'email', 'country', 'country_pk', 'push_off',
+                  'avatar', 'avatar_pk']
         depth = 1
 
     def validate_email(self, obj):
         if User.objects.filter(email=obj).exclude(id=self.context.get('request').user.id).exists():
             raise serializers.ValidationError(f"{obj} - уже существует")
+        return obj
+
+    def validate_avatar(self, obj):
         return obj

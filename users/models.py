@@ -6,6 +6,7 @@ from django.utils import timezone
 from cities_light.models import City, Country
 
 
+
 class User(AbstractUser):
     """Модель юзера"""
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
@@ -21,6 +22,7 @@ class User(AbstractUser):
     push_off = models.BooleanField('Отключение необязательных push уведомлений', blank=True, default=False)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Страна')
     is_verified = models.BooleanField('Верифицирован?', default=False)
+    avatar = models.ForeignKey('common.Image', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Аватар')
     USERNAME_FIELD = 'username'
 
     def __str__(self):
