@@ -6,7 +6,8 @@ from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
 from phonenumber_field.phonenumber import PhoneNumber
 from rest_framework import permissions, status
-from rest_framework.generics import CreateAPIView, GenericAPIView, UpdateAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView, UpdateAPIView, ListAPIView, RetrieveAPIView, \
+    get_object_or_404
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
@@ -16,11 +17,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from logisticproject.exceptions import BadeRequestException, ForbiddenException, AccessException
 from logisticproject.responses import AccessResponse
 from users import schema
-from users.models import ConfirmPhone, User, ConfirmPassword
-from users.permissions import IsOwner
+from users.models import ConfirmPhone, User, ConfirmPassword, PassportFiles
+from users.permissions import IsOwner, IsPassportOwner
 from users.serializers import CreateConfirmPhoneSerializer, ConfirmPhoneSerializer, RegistrationSerializer, \
     CustomTokenObtainPairSerializer, CreateConfirmPasswordSerializer, ConfirmPasswordSerializer, \
-    ResetPasswordSerializer, UserInfoSerializer, CountryLightSerializer
+    ResetPasswordSerializer, UserInfoSerializer, CountryLightSerializer, PassportFilesSerializer
 from users.tasks import send_code_for_confirm_phone, send_code_for_confirm_password
 
 
@@ -228,3 +229,14 @@ class UserInfoUpdateAPIView(UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class PassportAPIView(CreateAPIView,
+                      RetrieveAPIView,
+                      UpdateAPIView):
+    queryset = PassportFiles.objects.all()
+    serializer_class = PassportFilesSerializer
+    permission_classes = (IsPassportOwner,)
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, **{'author': self.request.user})

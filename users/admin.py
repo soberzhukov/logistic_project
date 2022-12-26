@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users.models import User, ConfirmPassword, ConfirmPhone
+from users.models import User, ConfirmPassword, ConfirmPhone, PassportFiles
 
 
 @admin.register(User)
@@ -27,4 +27,8 @@ class ConfirmPhoneAdmin(admin.ModelAdmin):
 
 @admin.register(ConfirmPassword)
 class ConfirmPasswordAdmin(admin.ModelAdmin):
+    exclude = []
+
+@admin.register(PassportFiles)
+class PassportFilesAdmin(admin.ModelAdmin):
     exclude = []

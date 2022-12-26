@@ -66,3 +66,18 @@ class ConfirmPassword(BaseConfirm):
         verbose_name = 'Подтвержение пароля'
         verbose_name_plural = 'Подтвержение пароля'
         ordering = ['expired_time']
+
+
+class PassportFiles(models.Model):
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+    author = models.ForeignKey(User, related_name='passports_files', on_delete=models.CASCADE, blank=True, unique=True)
+    main_page = models.FileField('Главная страница паспорта', upload_to='uploads/passports/')
+    registration_page  = models.FileField('Страница прописки', upload_to='uploads/passports/')
+    date_created = models.DateTimeField('Дата создания', blank=True, default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Файлы паспорта'
+        verbose_name_plural = 'Файлы паспорта'
+
+    def __str__(self):
+        return self.author

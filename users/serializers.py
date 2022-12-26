@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from common.models import Image
-from users.models import ConfirmPhone, User, ConfirmPassword
+from users.models import ConfirmPhone, User, ConfirmPassword, PassportFiles
 
 
 class CreateConfirmPhoneSerializer(serializers.ModelSerializer):
@@ -160,5 +160,15 @@ class UserInfoSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"{obj} - уже существует")
         return obj
 
-    def validate_avatar(self, obj):
-        return obj
+
+
+class PassportFilesSerializer(serializers.ModelSerializer):
+    author = GetUserSerializer(read_only=True)
+
+    class Meta:
+        model = PassportFiles
+        fields = '__all__'
+
+    def validate(self, attrs):
+        attrs['author'] = self.context['request'].user
+        return attrs

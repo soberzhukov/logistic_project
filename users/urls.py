@@ -1,8 +1,8 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from users import views
 from users.views import PasswordConfirmAPIView, ResetPasswordView
+from . import views
 
 urlpatterns = [
     path('sign-up/', views.RegistrationAPIView.as_view(), name='sing_up'),
@@ -16,6 +16,6 @@ urlpatterns = [
     # path('cities/', views.GetCitiesAPIView.as_view(), name='get_cities'),
     path('countries/', views.GetCountriesAPIView.as_view(), name='get_countries'),
     path('user_info/', views.UserInfoAPIView.as_view(), name='user_info'),
-    path('user_info/update/', views.UserInfoUpdateAPIView.as_view(), name='user_info_update')
-
+    path('user_info/update/', views.UserInfoUpdateAPIView.as_view(), name='user_info_update'),
+    path('user_info/passport/', views.PassportAPIView.as_view(), name='passport')
 ]
