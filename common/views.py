@@ -1,12 +1,12 @@
 from django.db.models import Count, F
 from rest_framework import permissions, mixins
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from common.models import SavedSearch
-from common.serializers import GetSavedSearchSerializer, CreateDeleteSavedSearchSerializer
+from common.serializers import GetSavedSearchSerializer, CreateDeleteSavedSearchSerializer, ImageSerializer
 from logisticproject.utils import BasicPagination
 from users.permissions import IsObjectAuthor
 
@@ -80,3 +80,8 @@ class ElectedViewSet(ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+
+class SaveImageAPIView(CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ImageSerializer

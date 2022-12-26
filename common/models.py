@@ -82,3 +82,18 @@ class SavedSearch(models.Model):
     class Meta:
         verbose_name = 'Сохраненный поиск'
         verbose_name_plural = 'Сохраненные поиски'
+
+
+class Image(models.Model):
+    """Изображения"""
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+    file = models.ImageField('Файл изображения', upload_to='uploads/images/')
+    date_created = models.DateTimeField('Дата создания', blank=True, default=timezone.now)
+    author = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.file.name
+
+    class Meta:
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'

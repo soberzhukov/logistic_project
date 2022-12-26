@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from common.models import SavedSearch
+from common.models import SavedSearch, Image
 from payment.models import Budget
 from payment.serializers import BudgetSerializer
 from users.serializers import GetUserSerializer
@@ -62,3 +62,16 @@ class GetSavedSearchSerializer(GetObjectSerializer):
 class CreateDeleteSavedSearchSerializer(UpdateObjectSerializer):
     class Meta(UpdateObjectSerializer.Meta):
         model = SavedSearch
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    """Сериализатор изображения"""
+
+    class Meta:
+        model = Image
+        fields = ['id', 'file']
+
+
+    def validate(self, attrs):
+        attrs['author'] = self.context['request'].user
+        return attrs
