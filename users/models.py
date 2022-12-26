@@ -19,8 +19,8 @@ class User(AbstractUser):
     cause_blocked = models.TextField('Причина блокировки', blank=True, null=True)
     is_admin = models.BooleanField('Администратор для обслуживания устройства', blank=True, default=False)
     push_off = models.BooleanField('Отключение необязательных push уведомлений', blank=True, default=False)
-    сountry = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Страна')
-    # is_verified = models.BooleanField('Верифицирован?', default=False) # todo добавить поле, + паспортные данные
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Страна')
+    is_verified = models.BooleanField('Верифицирован?', default=False)
     USERNAME_FIELD = 'username'
 
     def __str__(self):
