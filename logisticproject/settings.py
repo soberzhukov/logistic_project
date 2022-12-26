@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'order',
     'offer',
     'payment',
-    'contract'
+    'contract',
+    'selection'
 
 ]
 
