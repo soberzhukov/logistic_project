@@ -233,10 +233,19 @@ class UserInfoUpdateAPIView(UpdateAPIView):
 
 class PassportAPIView(CreateAPIView,
                       RetrieveAPIView,
-                      UpdateAPIView):
+                      UpdateAPIView,):
     queryset = PassportFiles.objects.all()
     serializer_class = PassportFilesSerializer
     permission_classes = (IsPassportOwner,)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            instance = PassportFiles.objects.get(author=request.user)
+        except PassportFiles.DoesNotExist:
+            return super().create(request, *args, **kwargs)
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     def get_object(self):
         return get_object_or_404(self.queryset, **{'author': self.request.user})

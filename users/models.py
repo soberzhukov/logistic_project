@@ -70,7 +70,7 @@ class ConfirmPassword(BaseConfirm):
 
 class PassportFiles(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    author = models.ForeignKey(User, related_name='passports_files', on_delete=models.CASCADE, blank=True, unique=True)
+    author = models.OneToOneField(User, related_name='passports_files', on_delete=models.CASCADE, blank=True)
     main_page = models.FileField('Главная страница паспорта', upload_to='uploads/passports/')
     registration_page  = models.FileField('Страница прописки', upload_to='uploads/passports/')
     date_created = models.DateTimeField('Дата создания', blank=True, default=timezone.now)
