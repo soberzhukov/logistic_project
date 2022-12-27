@@ -78,6 +78,3 @@ class PassportFiles(models.Model):
     class Meta:
         verbose_name = 'Файлы паспорта'
         verbose_name_plural = 'Файлы паспорта'
-
-    def __str__(self):
-        return self.author
