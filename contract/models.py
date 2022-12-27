@@ -43,6 +43,9 @@ class Contract(models.Model):
     signature = models.BooleanField('Подтвержден?', default=False)
     condition = models.CharField('condition', max_length=500, null=True, blank=True)
 
+    file = models.FileField('Прикрепленный файл', upload_to='uploads/contract_file/', null=True, blank=True)
+    comment = models.CharField('Комментарий', max_length=500, null=True, blank=True)
+
     class Meta:
         verbose_name = 'Контракт'
         verbose_name_plural = 'Контракты'
