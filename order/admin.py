@@ -5,7 +5,7 @@ from order.models import Order, ElectedOrder
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'author', 'name', 'date_created']
+    list_display = ['id', 'author', 'name', 'status', 'date_created']
 
 
 

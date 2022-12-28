@@ -5,7 +5,7 @@ from offer.models import Offer, ElectedOffer
 
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
-    list_display = ['id', 'author', 'name', 'date_created']
+    list_display = ['id', 'author', 'name', 'status', 'date_created']
 
 
 @admin.register(ElectedOffer)
