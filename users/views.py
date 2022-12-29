@@ -6,12 +6,14 @@ from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
 from phonenumber_field.phonenumber import PhoneNumber
 from rest_framework import permissions, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, GenericAPIView, UpdateAPIView, ListAPIView, RetrieveAPIView, \
     get_object_or_404
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.views import APIView
+from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from logisticproject.exceptions import BadeRequestException, ForbiddenException, AccessException
@@ -65,7 +67,7 @@ class PhoneConfirmAPIView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         instance = self.get_object(serializer)
         if instance.is_confirmed:
-            raise AccessException(message='Код уже подтвержден', code='confirmed')
+            raise BadeRequestException(message='К данному телефону уже зарегистрирован аккаунт', code='confirmed')
         instance.is_confirmed = True
         instance.save()
 
@@ -89,6 +91,16 @@ class RegistrationAPIView(CreateAPIView):
         response = super().post(request, *args, **kwargs)
         response.status_code = status.HTTP_200_OK
         return response
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError:
+            raise BadeRequestException(message='user_already_exist', code='400')
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         self._is_confirmed_phone(serializer)
@@ -114,7 +126,11 @@ class LoginAPIVIew(TokenObtainPairView):
 
     @swagger_auto_schema(responses=schema.LoginSchema.response)
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        try:
+            result = super().post(request, *args, **kwargs)
+        except AuthenticationFailed:
+            raise BadeRequestException(message='not_found_user', code='400')
+        return result
 
 
 class CreatePasswordConfirmAPIView(CreateAPIView):
@@ -200,12 +216,6 @@ class ResetPasswordView(APIView):
             return Response(data={'password': 'not confirmed'}, status=HTTP_400_BAD_REQUEST)
 
 
-# class GetCitiesAPIView(ListAPIView):
-#     """Получение списка городов"""
-#     serializer_class = CitiesLightSerializer
-#     queryset = City.objects.all()
-#     permission_classes = [permissions.AllowAny]
-
 class GetCountriesAPIView(ListAPIView):
     """Получение списка городов"""
     serializer_class = CountryLightSerializer
@@ -233,7 +243,7 @@ class UserInfoUpdateAPIView(UpdateAPIView):
 
 class PassportAPIView(CreateAPIView,
                       RetrieveAPIView,
-                      UpdateAPIView,):
+                      UpdateAPIView, ):
     queryset = PassportFiles.objects.all()
     serializer_class = PassportFilesSerializer
     permission_classes = (IsPassportOwner,)
