@@ -63,6 +63,6 @@ class SendSmsVerificationCode:
 
     def _generate_code(self) -> str:
         if settings.DEBUG:
-            return '1111'
-        code = "".join(random.choice(string.digits) for i in range(4))
+            return '111111'
+        code = "".join(random.choice(string.digits) for i in range(6))
         return code
