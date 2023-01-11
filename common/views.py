@@ -1,14 +1,15 @@
 from django.db.models import Count, F
-from rest_framework import permissions, mixins
+from rest_framework import permissions, mixins, status
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from common.models import SavedSearch
-from common.serializers import GetSavedSearchSerializer, CreateDeleteSavedSearchSerializer, ImageSerializer
+from common.serializers import GetSavedSearchSerializer, CreateDeleteSavedSearchSerializer, ImageSerializer, CreateImageSerializer
 from logisticproject.utils import BasicPagination
 from users.permissions import IsObjectAuthor
+from .actions import SaveImage
 
 
 class SearchViewSet(mixins.CreateModelMixin,
@@ -63,6 +64,7 @@ class CRUDObjectViewSet(ModelViewSet):
             return super().filter_queryset(queryset)
         return queryset
 
+
 class CounterObjectAPIView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -82,6 +84,22 @@ class ElectedViewSet(ModelViewSet):
         return self.queryset.filter(user=self.request.user)
 
 
+# class SaveImageAPIView(CreateAPIView):
+#     permission_classes = (permissions.IsAuthenticated,)
+#     serializer_class = ImageSerializer
+
 class SaveImageAPIView(CreateAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = ImageSerializer
+    """
+    Сохранение изображения
+
+    Принимает image - base64 code, extensions - расширение изображения
+    """
+    serializer_class = CreateImageSerializer
+
+    def create(self, request, *args, **kwargs):
+        if type(request.data) is not list:
+            return Response(data={'error': 'waiting list'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        images_id = SaveImage(serializer, request.user).save()
+        return Response(data={'images_id': images_id}, status=status.HTTP_201_CREATED)

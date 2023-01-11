@@ -75,3 +75,9 @@ class ImageSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs['author'] = self.context['request'].user
         return attrs
+
+
+class CreateImageSerializer(serializers.Serializer):
+    """Сериазитор сохранения изображения"""
+    image = serializers.CharField(required=True)
+    extensions = serializers.CharField(required=True)
