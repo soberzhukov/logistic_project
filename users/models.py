@@ -71,8 +71,9 @@ class ConfirmPassword(BaseConfirm):
 class PassportFiles(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     author = models.OneToOneField(User, related_name='passports_files', on_delete=models.CASCADE, blank=True)
-    main_page = models.FileField('Главная страница паспорта', upload_to='uploads/passports/')
-    registration_page  = models.FileField('Страница прописки', upload_to='uploads/passports/')
+    main_page = models.ForeignKey('common.Image', on_delete=models.SET_NULL, blank=False, null=True, verbose_name='Главная страница паспорта', related_name='passport_main_page')
+    registration_page  = models.ForeignKey('common.Image', on_delete=models.SET_NULL, blank=False, null=True, verbose_name='Страница прописки', related_name='passport_registration_page')
+    selfie_with_passport = models.ForeignKey('common.Image', on_delete=models.SET_NULL, blank=False, null=True, verbose_name='Селви с папортом', related_name='passport_selfie_with_passport')
     date_created = models.DateTimeField('Дата создания', blank=True, default=timezone.now)
 
     class Meta:

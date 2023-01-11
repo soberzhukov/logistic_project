@@ -168,6 +168,9 @@ class PassportFilesSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassportFiles
         fields = '__all__'
+        extra_kwargs = {'main_page': {'required': True},
+                        'registration_page': {'required': True},
+                        'selfie_with_passport': {'required': True}}
 
     def validate(self, attrs):
         attrs['author'] = self.context['request'].user
