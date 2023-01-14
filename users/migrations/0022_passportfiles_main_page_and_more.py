@@ -15,16 +15,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='passportfiles',
             name='main_page',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='passport_main_page', to='common.image', verbose_name='Главная страница паспорта'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='passport_main_page', to='common.File', verbose_name='Главная страница паспорта'),
         ),
         migrations.AddField(
             model_name='passportfiles',
             name='registration_page',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='passport_registration_page', to='common.image', verbose_name='Страница прописки'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='passport_registration_page', to='common.File', verbose_name='Страница прописки'),
         ),
         migrations.AddField(
             model_name='passportfiles',
             name='selfie_with_passport',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='passport_selfie_with_passport', to='common.image', verbose_name='Селви с папортом'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='passport_selfie_with_passport', to='common.File', verbose_name='Селви с папортом'),
         ),
     ]

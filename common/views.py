@@ -6,10 +6,10 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from common.models import SavedSearch
-from common.serializers import GetSavedSearchSerializer, CreateDeleteSavedSearchSerializer, ImageSerializer, CreateImageSerializer
+from common.serializers import GetSavedSearchSerializer, CreateDeleteSavedSearchSerializer, CreateFileSerializer
 from logisticproject.utils import BasicPagination
 from users.permissions import IsObjectAuthor
-from .actions import SaveImage
+from .actions import SaveFile
 
 
 class SearchViewSet(mixins.CreateModelMixin,
@@ -84,22 +84,18 @@ class ElectedViewSet(ModelViewSet):
         return self.queryset.filter(user=self.request.user)
 
 
-# class SaveImageAPIView(CreateAPIView):
-#     permission_classes = (permissions.IsAuthenticated,)
-#     serializer_class = ImageSerializer
-
-class SaveImageAPIView(CreateAPIView):
+class SaveFileAPIView(CreateAPIView):
     """
-    Сохранение изображения
+    Сохранение файла
 
-    Принимает image - base64 code, extensions - расширение изображения
+    Принимает base64 code, extensions - расширение файла
     """
-    serializer_class = CreateImageSerializer
+    serializer_class = CreateFileSerializer
 
     def create(self, request, *args, **kwargs):
         if type(request.data) is not list:
             return Response(data={'error': 'waiting list'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.serializer_class(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
-        images_id = SaveImage(serializer, request.user).save()
-        return Response(data={'images_id': images_id}, status=status.HTTP_201_CREATED)
+        files_id = SaveFile(serializer, request.user).save()
+        return Response(data={'files_id': files_id}, status=status.HTTP_201_CREATED)

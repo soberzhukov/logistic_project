@@ -8,5 +8,5 @@ router = DefaultRouter()
 router.register('search', views.SearchViewSet)
 
 urlpatterns = [
-    path('image/save/', views.SaveImageAPIView.as_view(), name='save_image'),
+    path('file/save/', views.SaveFileAPIView.as_view(), name='save_file'),
 ] + router.urls

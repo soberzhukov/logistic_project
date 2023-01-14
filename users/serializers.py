@@ -3,7 +3,8 @@ from phonenumber_field.phonenumber import PhoneNumber
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from common.models import Image
+from common.models import File
+from common.serializers import FileSerializer
 from users.models import ConfirmPhone, User, ConfirmPassword, PassportFiles
 
 
@@ -120,16 +121,6 @@ class GetUserSerializer(serializers.ModelSerializer):
         fields = ['username', 'first_name', 'last_name']
 
 
-#
-# class CitiesLightSerializer(serializers.ModelSerializer):
-#     """Сериализатор городов"""
-#     name = serializers.CharField(source='alternate_names')
-#
-#     class Meta:
-#         model = City
-#         fields = ['id', 'name']
-
-
 class CountryLightSerializer(serializers.ModelSerializer):
     """Сериализатор стран"""
     name = serializers.CharField(source='alternate_names')
@@ -146,7 +137,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
     )
     username = serializers.CharField(read_only=True)
     avatar_pk = serializers.PrimaryKeyRelatedField(
-        queryset=Image.objects.all(), source='avatar', write_only=True
+        queryset=File.objects.all(), source='avatar', write_only=True
     )
 
     class Meta:
@@ -161,16 +152,18 @@ class UserInfoSerializer(serializers.ModelSerializer):
         return obj
 
 
-
 class PassportFilesSerializer(serializers.ModelSerializer):
     author = GetUserSerializer(read_only=True)
+    main_page_file = FileSerializer(read_only=True, source='main_page')
+    registration_page_file = FileSerializer(read_only=True, source='registration_page')
+    selfie_with_passport_file = FileSerializer(read_only=True, source='selfie_with_passport')
 
     class Meta:
         model = PassportFiles
         fields = '__all__'
-        extra_kwargs = {'main_page': {'required': True},
-                        'registration_page': {'required': True},
-                        'selfie_with_passport': {'required': True}}
+        extra_kwargs = {'main_page': {'required': True, 'write_only': True},
+                        'registration_page': {'required': True, 'write_only': True},
+                        'selfie_with_passport': {'required': True, 'write_only': True}}
 
     def validate(self, attrs):
         attrs['author'] = self.context['request'].user

@@ -1,13 +1,21 @@
 from rest_framework import serializers
 
-from common.models import SavedSearch, Image
+from common.models import SavedSearch, File
 from payment.models import Budget
 from payment.serializers import BudgetSerializer
-from users.serializers import GetUserSerializer
+from users.models import User
+
+
+class CommonGetUserSerializer(serializers.ModelSerializer):
+    """Сериализатор отображение пользователя"""
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name']
 
 
 class GetObjectSerializer(serializers.ModelSerializer):
-    author = GetUserSerializer()
+    author = CommonGetUserSerializer()
     budgets = BudgetSerializer(many=True)
 
     class Meta:
@@ -37,7 +45,6 @@ class UpdateObjectSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
 
-
         if budgets_data := validated_data.get('budgets'):
             budget = BudgetSerializer(many=True, data=budgets_data)
             budget.is_valid(raise_exception=True)
@@ -64,20 +71,15 @@ class CreateDeleteSavedSearchSerializer(UpdateObjectSerializer):
         model = SavedSearch
 
 
-class ImageSerializer(serializers.ModelSerializer):
-    """Сериализатор изображения"""
+class FileSerializer(serializers.ModelSerializer):
+    """Сериазитор  файла"""
 
     class Meta:
-        model = Image
+        model = File
         fields = ['id', 'file']
 
 
-    def validate(self, attrs):
-        attrs['author'] = self.context['request'].user
-        return attrs
-
-
-class CreateImageSerializer(serializers.Serializer):
-    """Сериазитор сохранения изображения"""
-    image = serializers.CharField(required=True)
+class CreateFileSerializer(serializers.Serializer):
+    """Сериазитор сохранения файла"""
+    file = serializers.CharField(required=True)
     extensions = serializers.CharField(required=True)

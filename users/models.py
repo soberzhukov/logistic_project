@@ -1,10 +1,9 @@
 import uuid
 
+from cities_light.models import City, Country
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
-from cities_light.models import City, Country
-
 
 
 class User(AbstractUser):
@@ -22,7 +21,7 @@ class User(AbstractUser):
     push_off = models.BooleanField('Отключение необязательных push уведомлений', blank=True, default=False)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Страна')
     is_verified = models.BooleanField('Верифицирован?', default=False)
-    avatar = models.ForeignKey('common.Image', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Аватар')
+    avatar = models.ForeignKey('common.File', on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Аватар')
     USERNAME_FIELD = 'username'
 
     def __str__(self):
@@ -71,9 +70,13 @@ class ConfirmPassword(BaseConfirm):
 class PassportFiles(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     author = models.OneToOneField(User, related_name='passports_files', on_delete=models.CASCADE, blank=True)
-    main_page = models.ForeignKey('common.Image', on_delete=models.SET_NULL, blank=False, null=True, verbose_name='Главная страница паспорта', related_name='passport_main_page')
-    registration_page  = models.ForeignKey('common.Image', on_delete=models.SET_NULL, blank=False, null=True, verbose_name='Страница прописки', related_name='passport_registration_page')
-    selfie_with_passport = models.ForeignKey('common.Image', on_delete=models.SET_NULL, blank=False, null=True, verbose_name='Селви с папортом', related_name='passport_selfie_with_passport')
+    main_page = models.ForeignKey('common.File', on_delete=models.SET_NULL, blank=False, null=True,
+                                  verbose_name='Главная страница паспорта', related_name='passport_main_page')
+    registration_page = models.ForeignKey('common.File', on_delete=models.SET_NULL, blank=False, null=True,
+                                          verbose_name='Страница прописки', related_name='passport_registration_page')
+    selfie_with_passport = models.ForeignKey('common.File', on_delete=models.SET_NULL, blank=False, null=True,
+                                             verbose_name='Селви с папортом',
+                                             related_name='passport_selfie_with_passport')
     date_created = models.DateTimeField('Дата создания', blank=True, default=timezone.now)
 
     class Meta:
