@@ -5,7 +5,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from common.models import File
 from common.serializers import FileSerializer
-from users.models import ConfirmPhone, User, ConfirmPassword, PassportFiles
+from users.models import ConfirmPhone, User, ConfirmPassword, PassportFiles, ConfirmMail
 
 
 class CreateConfirmPhoneSerializer(serializers.ModelSerializer):
@@ -168,3 +168,19 @@ class PassportFilesSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs['author'] = self.context['request'].user
         return attrs
+
+
+class CreateConfirmMailSerializer(serializers.ModelSerializer):
+    """Сериализатор создания модели подтверждения пароля"""
+
+    class Meta:
+        model = ConfirmMail
+        fields = ['email']
+
+
+class ConfirmMailSerializer(serializers.ModelSerializer):
+    """Сериализатор подтверждения кода пароля"""
+
+    class Meta:
+        model = ConfirmMail
+        fields = ['email', 'code']

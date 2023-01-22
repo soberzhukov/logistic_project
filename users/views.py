@@ -19,12 +19,14 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from logisticproject.exceptions import BadeRequestException, ForbiddenException, AccessException
 from logisticproject.responses import AccessResponse
 from users import schema
-from users.models import ConfirmPhone, User, ConfirmPassword, PassportFiles
+from users.actions import send
+from users.models import ConfirmPhone, User, ConfirmPassword, PassportFiles, ConfirmMail
 from users.permissions import IsOwner, IsPassportOwner
 from users.serializers import CreateConfirmPhoneSerializer, ConfirmPhoneSerializer, RegistrationSerializer, \
     CustomTokenObtainPairSerializer, CreateConfirmPasswordSerializer, ConfirmPasswordSerializer, \
-    ResetPasswordSerializer, UserInfoSerializer, CountryLightSerializer, PassportFilesSerializer
-from users.tasks import send_code_for_confirm_phone, send_code_for_confirm_password
+    ResetPasswordSerializer, UserInfoSerializer, CountryLightSerializer, PassportFilesSerializer, ConfirmMailSerializer, \
+    CreateConfirmMailSerializer
+from users.tasks import send_code_for_confirm_phone, send_code_for_confirm_password, send_code_for_mail
 
 
 class CreatePhoneConfirmAPIView(CreateAPIView):
@@ -38,6 +40,7 @@ class CreatePhoneConfirmAPIView(CreateAPIView):
     def perform_create(self, serializer):
         phone = serializer.validated_data.get('phone')
         send_code_for_confirm_phone.delay(phone)
+
 
 
 class PhoneConfirmAPIView(GenericAPIView):
@@ -259,3 +262,49 @@ class PassportAPIView(CreateAPIView,
 
     def get_object(self):
         return get_object_or_404(self.queryset, **{'author': self.request.user})
+
+
+class CreateMailConfirmAPIView(CreateAPIView):
+    """
+    Создание модели подтверждение mail
+    """
+    serializer_class = CreateConfirmMailSerializer
+    queryset = ConfirmMail.objects.all()
+    permission_classes = [permissions.AllowAny]
+
+    def perform_create(self, serializer):
+        email = serializer.validated_data.get('email')
+        send_code_for_mail.delay(email)
+
+class MailConfirmAPIView(GenericAPIView):
+    """
+    Подтверждение пользователя
+
+    По mail
+    """
+    serializer_class = ConfirmMailSerializer
+    queryset = ConfirmMail.objects.all()
+    permission_classes = [permissions.AllowAny]
+
+    def get_object(self, serializer):
+        email = serializer.validated_data.get('email')
+        instance = self.queryset.filter(email=email).last()
+        if not instance:
+            raise BadeRequestException(message='Not found email', code='not_email')
+        if instance.code != serializer.data['code']:
+            raise BadeRequestException(message='Wrong code', code='wrong_code')
+        return instance
+
+
+    def _confirmed(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.get_object(serializer)
+        if instance.is_confirmed:
+            raise BadeRequestException(message='К данной почте уже зарегистрирован аккаунт', code='confirmed')
+        instance.is_confirmed = True
+        instance.save()
+
+    def post(self, request):
+        self._confirmed(request)
+        return AccessResponse()

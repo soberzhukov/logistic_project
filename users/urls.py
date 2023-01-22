@@ -1,7 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from users.views import PasswordConfirmAPIView, ResetPasswordView
 from . import views
 
 urlpatterns = [
@@ -11,8 +10,10 @@ urlpatterns = [
     path('confirm/create/', views.CreatePhoneConfirmAPIView.as_view(), name='create_confirm_phone'),
     path('confirm/confirmed/', views.PhoneConfirmAPIView.as_view(), name='confirm_phone'),
     path('confirm_pass/create/', views.CreatePasswordConfirmAPIView.as_view(), name='create_confirm_password'),
-    path('confirm_pass/confirmed/', PasswordConfirmAPIView.as_view(), name='confirm_password'),
-    path('reset_password/', ResetPasswordView.as_view(), name='reset_password'),
+    path('confirm_pass/confirmed/', views.PasswordConfirmAPIView.as_view(), name='confirm_password'),
+    path('confirm_mail/create/', views.CreateMailConfirmAPIView.as_view(), name='create_confirm_mail'),
+    path('confirm_mail/confirmed/', views.MailConfirmAPIView.as_view(), name='confirm_mail'),
+    path('reset_password/', views.ResetPasswordView.as_view(), name='reset_password'),
     # path('cities/', views.GetCitiesAPIView.as_view(), name='get_cities'),
     path('countries/', views.GetCountriesAPIView.as_view(), name='get_countries'),
     path('user_info/', views.UserInfoAPIView.as_view(), name='user_info'),

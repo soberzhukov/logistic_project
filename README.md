@@ -13,7 +13,7 @@ python3 -m pip install virtualenv && python3 -m virtualenv venv && source venv/b
 pip install -r requirements.txt
 ```
 
-## Для заполения fixture
+## Для заполнения fixture
 
 - Заполнить базу стран и городов
 ```bash

@@ -3,12 +3,21 @@ import random
 import string
 
 from django.conf import settings
+from django.core.mail import send_mail
 from phonenumber_field.phonenumber import PhoneNumber
 
 from logisticproject.container import Container
 from logisticproject.exceptions import BadeRequestException
-from users.models import ConfirmPhone, ConfirmPassword
+from users.models import ConfirmPhone, ConfirmPassword, ConfirmMail
 
+def send(user_email, code):
+    send_mail(
+        'LogisticProject',
+        f'Ваш код: {code}',
+        'nicessasa@gmail.com',
+        [user_email],
+        fail_silently=False
+    )
 
 class SendSmsVerificationCode:
     """
@@ -66,3 +75,17 @@ class SendSmsVerificationCode:
             return '111111'
         code = "".join(random.choice(string.digits) for i in range(6))
         return code
+
+    def send_for_mail(self, mail):
+        code = self._generate_code()
+        expired_time = datetime.datetime.now() + datetime.timedelta(minutes=5)
+        try:
+            confirm_mail = ConfirmMail.objects.get(email=mail, expired_time__gte=datetime.datetime.now())
+            confirm_mail.code = code
+            confirm_mail.save()
+        except:
+            confirm_mail = ConfirmMail.objects.create(code=code, email=mail, expired_time=expired_time)
+
+        send(mail, code)
+
+        return 'ok'

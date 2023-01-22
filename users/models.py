@@ -4,6 +4,7 @@ from cities_light.models import City, Country
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy
 
 
 class User(AbstractUser):
@@ -64,6 +65,18 @@ class ConfirmPassword(BaseConfirm):
     class Meta:
         verbose_name = 'Подтвержение пароля'
         verbose_name_plural = 'Подтвержение пароля'
+        ordering = ['expired_time']
+
+
+class ConfirmMail(BaseConfirm):
+    email = models.EmailField(gettext_lazy("email address"), blank=False)
+
+    def __str__(self):
+        return self.code
+
+    class Meta:
+        verbose_name = 'Подтвержение почты'
+        verbose_name_plural = 'Подтвержение почты'
         ordering = ['expired_time']
 
 
