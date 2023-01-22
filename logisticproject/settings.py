@@ -173,7 +173,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'nicessasa@gmail.com'
-EMAIL_HOST_PASSWORD = 'bkjidjlfrtxeqnjr' # сгенерированный пароль приложения
-EMAIL_PORT = 587
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') # сгенерированный пароль приложения
+EMAIL_PORT = os.getenv('EMAIL_PORT')
