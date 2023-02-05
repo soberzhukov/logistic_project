@@ -1,4 +1,5 @@
 import uuid
+import datetime
 
 from cities_light.models import City, Country
 from django.contrib.auth.models import AbstractUser
@@ -43,6 +44,9 @@ class BaseConfirm(models.Model):
     class Meta:
         abstract = True
 
+    def save(self, *args, **kwargs):
+        self.expired_time = timezone.now() + datetime.timedelta(minutes=5)
+        super().save(*args, **kwargs)
 
 class ConfirmPhone(BaseConfirm):
     phone = models.CharField('Номер телефона', max_length=20, blank=False)

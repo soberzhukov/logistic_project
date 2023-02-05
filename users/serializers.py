@@ -1,7 +1,10 @@
 from cities_light.models import Country
+from django.contrib.auth.models import update_last_login
+from django.utils import timezone
 from phonenumber_field.phonenumber import PhoneNumber
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.settings import api_settings
 
 from common.models import File
 from common.serializers import FileSerializer
@@ -47,6 +50,48 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         except Exception as exc:
             raise serializers.ValidationError({'username': str(exc)})
         return normalized_phone
+
+
+class CodeCustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """Сериализатор авторизации по коду"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields.pop('password')
+        self.fields["code"] = serializers.CharField(min_length=6, max_length=6)
+
+    def validate_username(self, phone):
+        try:
+            normalized_phone = PhoneNumber.from_string(phone_number=phone, region='RU').as_e164
+        except Exception as exc:
+            raise serializers.ValidationError({'username': str(exc)})
+        return normalized_phone
+
+    def validate(self, attrs):
+        data = {}
+
+        self.user = User.objects.get(username=attrs['username'])
+        self.custom_validate_code(attrs)
+
+        refresh = self.get_token(self.user)
+
+        data["refresh"] = str(refresh)
+        data["access"] = str(refresh.access_token)
+
+        if api_settings.UPDATE_LAST_LOGIN:
+            update_last_login(None, self.user)
+
+        return data
+
+    def custom_validate_code(self, attrs):
+        instance = ConfirmPhone.objects.filter(phone=attrs['username']).last()
+        if not instance:
+            raise serializers.ValidationError({'code': 'Not found code'})
+        if instance.code != attrs['code']:
+            raise serializers.ValidationError({'code': 'Wrong code'})
+        if instance.expired_time < timezone.now():
+            raise serializers.ValidationError({'code': 'Expired time'})
+        return instance
 
 
 class RegistrationSerializer(serializers.ModelSerializer):

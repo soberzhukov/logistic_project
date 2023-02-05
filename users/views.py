@@ -19,13 +19,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from logisticproject.exceptions import BadeRequestException, ForbiddenException, AccessException
 from logisticproject.responses import AccessResponse
 from users import schema
-from users.actions import send
 from users.models import ConfirmPhone, User, ConfirmPassword, PassportFiles, ConfirmMail
 from users.permissions import IsOwner, IsPassportOwner
 from users.serializers import CreateConfirmPhoneSerializer, ConfirmPhoneSerializer, RegistrationSerializer, \
     CustomTokenObtainPairSerializer, CreateConfirmPasswordSerializer, ConfirmPasswordSerializer, \
     ResetPasswordSerializer, UserInfoSerializer, CountryLightSerializer, PassportFilesSerializer, ConfirmMailSerializer, \
-    CreateConfirmMailSerializer
+    CreateConfirmMailSerializer, CodeCustomTokenObtainPairSerializer
 from users.tasks import send_code_for_confirm_phone, send_code_for_confirm_password, send_code_for_mail
 
 
@@ -40,7 +39,6 @@ class CreatePhoneConfirmAPIView(CreateAPIView):
     def perform_create(self, serializer):
         phone = serializer.validated_data.get('phone')
         send_code_for_confirm_phone.delay(phone)
-
 
 
 class PhoneConfirmAPIView(GenericAPIView):
@@ -126,6 +124,23 @@ class LoginAPIVIew(TokenObtainPairView):
     После авторизации выдается access и refresh токен
     """
     serializer_class = CustomTokenObtainPairSerializer
+
+    @swagger_auto_schema(responses=schema.LoginSchema.response)
+    def post(self, request, *args, **kwargs):
+        try:
+            result = super().post(request, *args, **kwargs)
+        except AuthenticationFailed:
+            raise BadeRequestException(message='not_found_user', code='400')
+        return result
+
+
+class CodeLoginAPIVIew(TokenObtainPairView):
+    """
+    Авторизация пользователя
+
+    После авторизации выдается access и refresh токен
+    """
+    serializer_class = CodeCustomTokenObtainPairSerializer
 
     @swagger_auto_schema(responses=schema.LoginSchema.response)
     def post(self, request, *args, **kwargs):
@@ -276,6 +291,7 @@ class CreateMailConfirmAPIView(CreateAPIView):
         email = serializer.validated_data.get('email')
         send_code_for_mail.delay(email)
 
+
 class MailConfirmAPIView(GenericAPIView):
     """
     Подтверждение пользователя
@@ -294,7 +310,6 @@ class MailConfirmAPIView(GenericAPIView):
         if instance.code != serializer.data['code']:
             raise BadeRequestException(message='Wrong code', code='wrong_code')
         return instance
-
 
     def _confirmed(self, request):
         serializer = self.serializer_class(data=request.data)
