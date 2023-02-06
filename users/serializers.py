@@ -188,7 +188,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'patronymic', 'email', 'country', 'country_pk', 'push_off',
-                  'avatar', 'avatar_pk']
+                  'avatar', 'avatar_pk', 'is_verified']
         depth = 1
 
     def validate_email(self, obj):
