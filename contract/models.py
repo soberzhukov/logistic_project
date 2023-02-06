@@ -37,7 +37,7 @@ class Contract(models.Model):
     executor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True,
                                  related_name='contracts_executor', verbose_name='Исполнитель')
     customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True,
-                                 related_name='contracts_customer', verbose_name='Покупатель')
+                                 related_name='contracts_customer', verbose_name='Заказчик')
     status = models.CharField('Статус', max_length=300, choices=STATUS_CHOICES, blank=True,
                               default=StatusContract.CREATED)
     signature = models.BooleanField('Подтвержден?', default=False)
