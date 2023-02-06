@@ -46,3 +46,20 @@ class MainChatSerializer(serializers.ModelSerializer):
         request = self.context.get('request', None)
         return UserInfoSerializer(instance=user,
                                   context={'request': request}).data
+
+
+class CreateChatMessageSerializer(serializers.ModelSerializer):
+    """Сериализатор создания сообщения чата"""
+    class Meta:
+        model = ChatMessage
+        fields = '__all__'
+        extra_kwargs = {"id": {"read_only": True},
+                        "text": {"required": False}}
+
+
+    def validate(self, attrs):
+        if not attrs.get('text') and not attrs.get('chat_files'):
+            raise serializers.ValidationError(
+                detail='You must forward at least one of these fields text or chat_files')
+
+        return super().validate(attrs)

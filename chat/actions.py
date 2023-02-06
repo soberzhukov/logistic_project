@@ -1,6 +1,8 @@
-from chat.serializers import ItemChatSerializer
+from typing import Type
 
-from chat.models import MainChat
+from chat.models import MainChat, ItemChat
+from chat.serializers import ItemChatSerializer, CreateChatMessageSerializer
+from logisticproject.exceptions import BadeRequestException
 from users.models import User
 
 
@@ -21,11 +23,36 @@ class CreateChat:
             if items:
                 serializer = ItemChatSerializer(items.last())
                 return main_chat
-                # return serializer.data
+
         item_chat = self._serializer.save()
         main_chat.items_chat.add(item_chat)
         main_chat.save()
-        return main_chat  # self._serializer.data
+        return main_chat
 
 
+class CreateChatMessage:
+    def __init__(self, pk: str, user: User, data: dict, serializers_class: Type[CreateChatMessageSerializer]):
+        self._pk = pk
+        self._user = user
+        self._data = data
+        self._serializers_class = serializers_class
 
+    def create(self) -> dict:
+        self._data['author'] = self._user.id
+        serializer = self._serializers_class(data=self._data)
+        serializer.is_valid(raise_exception=True)
+        message = serializer.save()
+
+        item_chat = self._get_item_chat()
+        item_chat.messages.add(message)
+        item_chat.save()
+
+        return serializer.data
+
+    def _get_item_chat(self) -> ItemChat:
+        try:
+            return ItemChat.objects.get(pk=self._pk)
+        except ItemChat.DoesNotExist:
+            raise BadeRequestException(
+                message=f'Chat with this ID: {self._pk} was not found',
+                code='chat_not_found')
