@@ -33,7 +33,7 @@ class CommonObject(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
-    name = models.CharField('Название Предложениеа', max_length=500)
+    name = models.CharField('Название', max_length=500)
     description = models.TextField('Описание', blank=True, null=True)
     short_description = models.CharField('Короткое описание', blank=True, null=True, max_length=500)
     status = models.CharField('Статус', max_length=300, choices=STATUS_CHOICES, blank=True, default=CommonStatus.DRAFT)
