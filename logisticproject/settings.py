@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'offer',
     'payment',
     'contract',
-    'selection'
-
+    'selection',
+    'chat'
 ]
 
 MIDDLEWARE = [
