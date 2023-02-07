@@ -17,16 +17,15 @@ class ChatMessageSerializer(serializers.ModelSerializer):
 
 class ItemChatSerializer(serializers.ModelSerializer):
     """Сериализатор предмета чата, используется для создания чата"""
-    messages = ChatMessageSerializer(many=True, read_only=True)
     last_message = serializers.SerializerMethodField('get_last_message')
 
     class Meta:
         model = ItemChat
-        fields = '__all__'
+        exclude = ['messages']
         extra_kwargs = {"id": {"read_only": True}}
 
     def get_last_message(self, obj):
-        return obj.messages.last()
+        return ChatMessageSerializer(obj.messages.last()).data
 
 
 class MainChatSerializer(serializers.ModelSerializer):
@@ -63,3 +62,11 @@ class CreateChatMessageSerializer(serializers.ModelSerializer):
                 detail='You must forward at least one of these fields text or chat_files')
 
         return super().validate(attrs)
+
+class GetMessages(ItemChatSerializer):
+    """Сериализатор предмета чата для получения сообщений"""
+    messages = ChatMessageSerializer(many=True, read_only=True)
+    last_message = None
+
+    class Meta(ItemChatSerializer.Meta):
+        exclude = []

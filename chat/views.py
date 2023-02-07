@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from logisticproject.responses import CreatedResponse
 from .actions import CreateChat, CreateChatMessage
 from .models import ItemChat, MainChat, ChatMessage
-from .serializers import ItemChatSerializer, MainChatSerializer, CreateChatMessageSerializer
+from .serializers import ItemChatSerializer, MainChatSerializer, CreateChatMessageSerializer, GetMessages
 
 
 class CreateChatAPIView(CreateAPIView):
@@ -47,6 +47,11 @@ class RetrieveDeleteMainChatAPIView(RetrieveDestroyAPIView):
 class GetOrDeleteChatAPIView(RetrieveDestroyAPIView):
     """Получение или удаление чата с заказчиком"""
     serializer_class = ItemChatSerializer
+    queryset = ItemChat.objects.all()
+
+class GetMessagesAPIView(RetrieveDestroyAPIView):
+    """Получение всех сообщений чата"""
+    serializer_class = GetMessages
     queryset = ItemChat.objects.all()
 
 class CreateChatMessageAPIView(CreateAPIView):
